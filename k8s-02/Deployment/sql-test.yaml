@@ -1,0 +1,54 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: sql-test
+  name: sql-test
+  namespace: k8s-02
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: sql-test
+      tier: mysql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sql-test
+        tier: mysql
+    spec:
+      containers:
+      - env:
+        - name: MYSQL_DATABASE
+          value: wp-test-sql
+        - name: MYSQL_USER
+          value: wp-test-sql
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: wp-test-sql
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: sql-test-root
+        image: mysql:5.6
+        imagePullPolicy: IfNotPresent
+        name: mysql
+        ports:
+        - containerPort: 3306
+          name: mysql
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: "/var/lib/mysql"
+          name: mysql-test-storage
+      volumes:
+      - name: mysql-test-storage
+        persistentVolumeClaim:
+          claimName: sql-test-pv-claim

@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: default
+  namespace: kubernetes-dashboard
+secrets:
+- name: default-token-rkfp7

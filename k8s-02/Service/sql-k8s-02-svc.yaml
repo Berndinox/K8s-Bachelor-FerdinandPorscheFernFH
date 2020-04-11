@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sql-test
+  name: sql-k8s-02-svc
+  namespace: k8s-02
+spec:
+  clusterIP: None
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: sql-test
+    tier: mysql
+  sessionAffinity: None
+  type: ClusterIP

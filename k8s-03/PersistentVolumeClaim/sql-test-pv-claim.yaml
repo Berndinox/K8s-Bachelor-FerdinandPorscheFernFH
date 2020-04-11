@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/bind-completed: 'yes'
+    pv.kubernetes.io/bound-by-controller: 'yes'
+    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/azure-disk
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: sql-test
+  name: sql-test-pv-claim
+  namespace: k8s-03
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: default
+  volumeMode: Filesystem
+  volumeName: pvc-e9cf2c52-6ea7-47c9-a1e3-efb7fb5dcce9

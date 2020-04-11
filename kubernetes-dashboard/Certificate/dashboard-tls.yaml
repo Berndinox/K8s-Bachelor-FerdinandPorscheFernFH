@@ -1,0 +1,21 @@
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: dashboard-tls
+  namespace: kubernetes-dashboard
+  ownerReferences:
+  - apiVersion: extensions/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Ingress
+    name: dashboard-ingress
+    uid: d13bdccd-17a3-11ea-9524-da73c6c81572
+spec:
+  dnsNames:
+  - dashboard.klaus.onl
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: dashboard-tls

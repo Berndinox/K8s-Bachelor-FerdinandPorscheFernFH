@@ -1,0 +1,58 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: wp-k8s-03
+  name: wp-k8s-03
+  namespace: k8s-03
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: wp-k8s-03
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: wp-k8s-03
+        tier: frontend
+    spec:
+      containers:
+      - env:
+        - name: MARIADB_HOST
+          value: sql-k8s-03-svc
+        - name: MARIADB_PORT
+          value: '3306'
+        - name: WORDPRESS_DATABASE_USER
+          value: wp-test-sql
+        - name: WORDPRESS_DATABASE_NAME
+          value: wp-test-sql
+        - name: WORDPRESS_DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: wp-test-sql
+        - name: WORDPRESS_USERNAME
+          value: bernd
+        - name: WORDPRESS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: wp-test-user
+        - name: WORDPRESS_BLOG_NAME
+          value: Kubernetes 03
+        image: bitnami/wordpress:5
+        imagePullPolicy: IfNotPresent
+        name: wordpress
+        resources: {}
+        volumeMounts:
+        - mountPath: "/bitnami/wordpress"
+          name: wordpress-test-storage
+      volumes:
+      - name: wordpress-test-storage
+        persistentVolumeClaim:
+          claimName: wp-test-pv-claim

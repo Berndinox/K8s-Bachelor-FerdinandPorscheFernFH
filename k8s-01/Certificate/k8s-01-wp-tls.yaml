@@ -1,0 +1,21 @@
+---
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: k8s-01-wp-tls
+  namespace: k8s-01
+  ownerReferences:
+  - apiVersion: extensions/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Ingress
+    name: k8s-01-ingress
+    uid: ff9f0227-55fa-4e19-bbea-11d643e3a6a4
+spec:
+  dnsNames:
+  - 01.k8s.klaus.onl
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  secretName: k8s-01-wp-tls

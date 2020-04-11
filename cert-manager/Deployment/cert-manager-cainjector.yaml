@@ -1,0 +1,51 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: cainjector
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/managed-by: Tiller
+    app.kubernetes.io/name: cainjector
+    helm.sh/chart: cert-manager-v0.12.0
+  name: cert-manager-cainjector
+  namespace: cert-manager
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: cainjector
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/managed-by: Tiller
+      app.kubernetes.io/name: cainjector
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cainjector
+        app.kubernetes.io/instance: cert-manager
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: cainjector
+        helm.sh/chart: cert-manager-v0.12.0
+    spec:
+      containers:
+      - args:
+        - "--v=2"
+        - "--leader-election-namespace=kube-system"
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        image: quay.io/jetstack/cert-manager-cainjector:v0.12.0
+        imagePullPolicy: IfNotPresent
+        name: cert-manager
+        resources: {}
+      serviceAccount: cert-manager-cainjector
+      serviceAccountName: cert-manager-cainjector

@@ -1,0 +1,23 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  annotations:
+    pv.kubernetes.io/bind-completed: 'yes'
+    pv.kubernetes.io/bound-by-controller: 'yes'
+    volume.beta.kubernetes.io/storage-provisioner: kubernetes.io/azure-file
+  finalizers:
+  - kubernetes.io/pvc-protection
+  labels:
+    app: wp-k8s-01
+  name: wp-test-pv-claim
+  namespace: k8s-01
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: shared-standard
+  volumeMode: Filesystem
+  volumeName: pvc-fd9022e9-c431-4e37-8f60-452ec1b4928b
